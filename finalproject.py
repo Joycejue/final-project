@@ -353,11 +353,12 @@ def store_director_data_in_db(movie):
             print("Failed to add to table directors")
             print(e)
     else:
-        print("This Director ALREADY EXISTED!!")
+        # print("This Director ALREADY EXISTED!!")
+        pass
 
                 
     ########table Directors_movie            
-    statement = '''SELECT * FROM Directors_movie 
+    statement = '''SELECT * FROM Direct_movie 
                 WHERE DirectorId =  {} AND MovieId = {}
                 '''.format(movie['director_id'], movie['movie_id'])
  
@@ -388,7 +389,8 @@ def store_director_data_in_db(movie):
             conn.rollback()
 
     else:
-        print("This Director direct movie ALREADY EXISTED!!")
+        # print("This Director direct movie ALREADY EXISTED!!")
+        pass
        
 
 
@@ -425,7 +427,8 @@ def store_actor_data_to_db(actor, movie):
             print(e)
             conn.rollback()
     else:
-        print("This actor has been saved already.")        
+        # print("This actor has been saved already.") 
+        pass       
             
 
     statement = '''SELECT * FROM Cast_in_movie 
@@ -459,14 +462,18 @@ def store_actor_data_to_db(actor, movie):
             
 
     else:
-        print("This actor casted in movie data already existed.")        
+        # print("This actor casted in movie data already existed.")  
+        pass      
 
 
 
 create_imdb()
 for movie in get_top250_movies_list():
+    # print(movie)
     store_movie_data_to_db(movie)
     get_movie_detail_data(movie)
+    # print(movie)
+
 
 
 conn.close()
