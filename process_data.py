@@ -2,7 +2,7 @@ import sqlite3
 import plotly.plotly as py
 from prettytable import PrettyTable
 import plotly.graph_objs as go
-
+from plotly.graph_objs import *
 
 
 
@@ -43,6 +43,8 @@ def search_movies_by_director():
     result = cur.fetchall()
     if result.__len__() == 0:
         result_tuple_1 = ()
+        conn.close()
+
         return result_tuple_1
 
     else:
@@ -159,6 +161,7 @@ def search_actor():
 
     if result.__len__() == 0:
         result_tuple = ()
+        conn.close()
         return result_tuple
 
     else:
@@ -229,7 +232,7 @@ def top_director(order, limit):
 
     result = cur.fetchall()
     
-    cur.close()
+    conn.close()
     return result
     
 
@@ -274,6 +277,8 @@ def top_actor(order, limit):
     for row in cur:
         if row[0] != "Unknown":
             result.append(row)
+
+    conn.close()        
     
     return result
     
@@ -282,10 +287,8 @@ def top_actor(order, limit):
 
 
 
-def bar_charts(result,name,title):
+def bar_charts_director(result,name,title):
     
-
-
     key = []
     va = []
     for i in result:
@@ -326,6 +329,160 @@ def bar_charts(result,name,title):
 
 
 
+
+def bar_charts_actor(result,name,title):
+
+    key = []
+    va = []
+    for i in result:
+        key.append(i[0])
+        va.append(i[1])
+    
+
+
+    dataset = {'x':key,
+            'y1': va}
+
+    data_g = []
+
+    tr_y1 = go.Bar(
+        x = dataset['x'],
+        y = dataset['y1'],
+        name = 'v1',
+        text=dataset['y1'],
+                textposition = 'auto',
+                marker=dict(
+                    color='rgb(158,202,225)',
+                    line=dict(
+                        color='rgb(8,48,107)',
+                        width=1.5),
+                ),
+                opacity=0.6
+      )
+    
+    data_g.append(tr_y1)
+
+
+    layout = go.Layout(title=title, xaxis={'title':'Actor Name'}, yaxis={'title':'Number of Movies'})
+
+    fig = go.Figure(data=data_g, layout=layout)
+
+    py.plot(fig, filename=name)
+
+
+
+
+
+
+def top_country_pie_chart(input_number,name):
+
+    DBNAME = 'IMDb.db'
+
+    try:
+        conn = sqlite3.connect(DBNAME)
+        cur = conn.cursor()
+    except:
+        print("Failed to connect to db.")
+
+
+
+    statement = '''
+        SELECT Directors.BornCountry, COUNT(Directors.BornCountry)
+        FROM Directors
+        GROUP BY Directors.BornCountry
+        ORDER BY COUNT(Directors.BornCountry) DESC
+        LIMIT {}
+
+    '''.format(input_number)
+
+    cur.execute(statement)
+
+
+    born_country_list = []
+    count_list = []
+    
+    for row in cur:
+        born_country_list.append(row[0])
+        count_list.append(row[1])
+
+
+    conn.close()
+
+    labels = born_country_list
+    values = count_list
+    
+    # trace = go.Pie(labels=labels, values=values, layout=layout)
+
+
+    fig = {
+        "data":[
+            {
+                "labels":labels, 
+                "values":values,
+                'type':'pie'}
+                ], 
+        "layout":{"title":name}
+        }
+    
+    py.plot(fig, filename=name)
+
+
+
+
+
+
+
+def line_chart_year(input_number,name):
+    
+    DBNAME = 'IMDb.db'
+
+    try:
+        conn = sqlite3.connect(DBNAME)
+        cur = conn.cursor()
+    except:
+        print("Failed to connect to db.")
+
+
+
+    statement = '''
+        SELECT Top_250_movies.ReleaseYear, COUNT(Top_250_movies.Id)
+        FROM Top_250_movies
+        GROUP BY Top_250_movies.ReleaseYear
+
+        ORDER BY Top_250_movies.ReleaseYear DESC
+        LIMIT {}
+
+    '''.format(input_number)
+
+
+    cur.execute(statement)
+
+    year = []
+    count = []
+
+    for row in cur:
+        year.append(str(row[0]))
+        count.append(row[1])
+
+    # print(year)
+    # print(count)    
+
+    conn.close()
+
+    trace = go.Scatter(x=year, y=count)
+    data = [trace]
+    layout = dict(title = name,
+              xaxis = dict(title = 'Year'),
+              yaxis = dict(title = 'Number of Movies')
+              )
+    fig = dict(data=data, layout=layout)
+
+    py.plot(fig, filename=name)
+
+
+
+
+
 def parse_command(response):
 
     params_dic = {}
@@ -349,6 +506,8 @@ def parse_command(response):
         params_dic["order"] = "top"
         params_dic["limit"] = 10
 
+
+
     return params_dic
 
 
@@ -367,129 +526,187 @@ def interactive_prompt():
     help_text = load_help_text()
     response = ''
     while response != 'exit':
-        response = input('Enter a command: ')
+        try:
+
+            response = input('Enter a command: ')
+            
+            if response.lower() == 'help':
+                print(help_text)
+                continue
+
+            elif response.lower() == 'search director':
+                result_1 = search_movies_by_director()
+                
+                if len(result_1)==0:
+                    print("This director is not on the Top 205 list.")
+
+                else:
+
+                    result_2 = movie_details_by_director(result_1[0])
+                    instance = Director_movie(result_1,result_2)
+                    print(instance)  #use the str method of the Class
+
+                    title = []
+                    releaseyear = []
+                    rate = []
+                    
+                    for t in instance.movies:
+                        # print(t)
+                        title.append(t[0])
+                        releaseyear.append(t[1])
+                        rate.append(t[2])
+                        
+                    col = PrettyTable()
+                    col.add_column("Movie Title", title)
+                    col.add_column("Release Year", releaseyear)
+                    col.add_column("Rate", rate)
+                    col.align = 'l'
+                    # col.border = 0
+                    print(col)
+                
+
+            elif response.lower() ==  "search actor":
+                result = search_actor()
+
+                if len(result) == 0:
+                    print("This actor is not on the Top 205 list.")
+                
+                else:
+                    instance = Actor_movie(result)
+                    print(instance)
+
+                    title = []
+                    releaseyear = []
+                    rate = []
+                    
+                    for t in instance.movies:
+                        # print(t)
+                        title.append(t[0])
+                        releaseyear.append(t[1])
+                        rate.append(t[2])
+                        
+                    col = PrettyTable()
+                    col.add_column("Movie Title", title)
+                    col.add_column("Release Year", releaseyear)
+                    col.add_column("Rate", rate)
+                    col.align = 'l'
+                    # col.border = 0
+                    print(col)
+
+
+
+
+
+            elif response.lower().split()[0] == "director":
+                
+                response = response.split()
+                result = top_director(**parse_command(response))
+
+                name = []
+                count = []                
+                for t in result:
+                    # print(t)
+                    name.append(t[0])
+                    count.append(t[1])
+                    
+                col = PrettyTable()
+                col.add_column("Director Name", name)
+                col.add_column("Movie Count", count)
+                col.align = 'l'
+                # col.border = 0
+                print(col)
+
+
+            elif response.lower().split()[0] == "actor":
+                response = response.split()
+                result = top_actor(**parse_command(response))
+
+
+                name = []
+                count = []                            
+                for t in result:
+                    # print(t)
+                    name.append(t[0])
+                    count.append(t[1])
+                    
+                col = PrettyTable()
+                col.add_column("Director Name", name)
+                col.add_column("Movie Count", count)
+                col.align = 'l'
+                # col.border = 0
+                print(col)
+
+                    
+
+            elif response.lower() == "top directors bar chart":
+                try:
+                    number = int(input("How many? "))
+                    if number <= 3048:
+                        params_dic = {"order":"top","limit":number}
+                        result = top_director(**params_dic)
+                        bar_charts_director(result = result, name = "Bar Chart - Top {} Directors".format(number), title = "Bar Chart - Top {} Directors".format(number))
+                    else:
+                        print("Wrong input. Please enter an integer (<3048) next time.")    
+                except:
+                    print("Wrong input. Please enter an integer (<3048) next time.")
+                    
+
+
+            elif response.lower() == "top actors bar chart":
+                try:
+                    number = int(input("How many? "))
+                    if number <= 151:
+                        params_dic = {"order":"top","limit":number}
+                        result = top_actor(**params_dic)
+                        bar_charts_actor(result = result, name = "Bar Chart - Top {} Actor".fomat(number), title = "Bar Chart - Top {} Actor".fomat(number))
+                    else:
+                        print("Wrong input. Please enter an integer (<151) next time.")
+                            
+                except:
+                    print("Wrong input. Please enter an integer (<151) next time.")
+                    
+
+
+
+            elif response.lower() == "top countries for directors pie chart":
+                try:
+                    number = int(input("How many different countries? "))
+                    if number <= 30:
+                        top_country_pie_chart(input_number=number, name="Pie Chart - Top {} Countries for Directors".format(number))
+                    else:
+                        print("Wrong input. Please enter an integer (<30) next time.")    
+                            
+                except:
+                    print("Wrong input. Please enter an integer (<30) next time.")    
+
+
+
+            elif response.lower() == "years line chart":
+                try:
+                    number = int(input("How many years? "))
+                    if number <= 82:
+                        line_chart_year(input_number=number, name="Line Chart - Number of Movies in the Last {} Years".format(number))
+                    else:
+                        print("Wrong input. Please enter an integer (<30) next time.")    
         
-        if response.lower() == 'help':
-            print(help_text)
-            continue
-
-        elif response.lower() == 'search director':
-            result_1 = search_movies_by_director()
-            
-            if len(result_1)==0:
-                print("This director is not on the Top 205 list.")
-
-            else:
-
-                result_2 = movie_details_by_director(result_1[0])
-                instance = Director_movie(result_1,result_2)
-                print(instance)  #use the str method of the Class
-
-                title = []
-                releaseyear = []
-                rate = []
-                
-                for t in instance.movies:
-                    # print(t)
-                    title.append(t[0])
-                    releaseyear.append(t[1])
-                    rate.append(t[2])
-                    
-                col = PrettyTable()
-                col.add_column("Movie Title", title)
-                col.add_column("Release Year", releaseyear)
-                col.add_column("Rate", rate)
-                col.align = 'l'
-                # col.border = 0
-                print(col)
-            
-
-        elif response.lower() ==  "search actor":
-            result = search_actor()
-
-            if len(result) == 0:
-                print("This actor is not on the Top 205 list.")
-            
-            else:
-                instance = Actor_movie(result)
-                print(instance)
-
-                title = []
-                releaseyear = []
-                rate = []
-                
-                for t in instance.movies:
-                    # print(t)
-                    title.append(t[0])
-                    releaseyear.append(t[1])
-                    rate.append(t[2])
-                    
-                col = PrettyTable()
-                col.add_column("Movie Title", title)
-                col.add_column("Release Year", releaseyear)
-                col.add_column("Rate", rate)
-                col.align = 'l'
-                # col.border = 0
-                print(col)
+                except:
+                    # print(e)
+                    print("Wrong input. Please enter an integer (<82) next time.")    
 
 
-        elif response.lower().split()[0] == "director":
-            
-            response = response.split()
-            result = top_director(**parse_command(response))
-
-            name = []
-            count = []                
-            for t in result:
-                # print(t)
-                name.append(t[0])
-                count.append(t[1])
-                
-            col = PrettyTable()
-            col.add_column("Director Name", name)
-            col.add_column("Movie Count", count)
-            col.align = 'l'
-            # col.border = 0
-            print(col)
 
 
-        elif response.lower().split()[0] == "actor":
-            response = response.split()
-            result = top_actor(**parse_command(response))
+            elif response.lower() == "exit":
+                print("Bye!")
 
 
-            name = []
-            count = []                            
-            for t in result:
-                # print(t)
-                name.append(t[0])
-                count.append(t[1])
-                
-            col = PrettyTable()
-            col.add_column("Director Name", name)
-            col.add_column("Movie Count", count)
-            col.align = 'l'
-            # col.border = 0
-            print(col)
-
-                
-
-        elif response.lower() == "top directors bar chart":
-            number = int(input("How many? "))
-            params_dic = {"order":"top","limit":number}
-            result = top_director(**params_dic)
-            bar_charts(result = result, name = "Top {} Directors Bar Chart".format(number), title = "Top {} Directors Bar Chart".format(number))
-
-
-        elif response.lower() == "exit":
-            print("Bye!")
-
-
-       
-        else:
-            print('''Oops! Command not recognized: \"{}\"\nPlease enter a correct command.'''.format(response))
            
+            else:
+                print('''Oops! Command not recognized: \"{}\"\nPlease enter a correct command.'''.format(response))
+               
 
+        except:
+            print('''Oops! Command not recognized: \"{}\"\nPlease enter a correct command.'''.format(response))
 
 
 
