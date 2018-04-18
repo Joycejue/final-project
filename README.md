@@ -1,9 +1,11 @@
 # final-project
 1. Data Source
 API keys or client secrets are not needed.
+
 -----------------------------------------------------------------------------------------------------------------------
 2. Other information
 Any other information needed to run the program (e.g., pointer to getting started info for plotly)
+
 -----------------------------------------------------------------------------------------------------------------------
 3. Brief description of structure of code
 (1). Data access and storage: 
@@ -27,8 +29,9 @@ The required one class:
 class Director_movie(): This class takes results from other functions as input, and generates instances related to directors and movies.
 
 Many other functions are in the file, but not listed here.
+
 -----------------------------------------------------------------------------------------------------------------------
-4.Brief user guide, including how to run the program and how to choose presentation options.
+4.Brief user guide
 You can enter "help" for all available commands and user guide.
 
 Thanks! :)
