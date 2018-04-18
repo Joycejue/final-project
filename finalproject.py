@@ -296,7 +296,7 @@ def get_movie_detail_data(movie_data):
     except RequestException:
         print("Get Movie URL failed!")
     
-    return None
+    return movie_data
 
 
 
@@ -466,15 +466,15 @@ def store_actor_data_to_db(actor, movie):
         pass      
 
 
+if __name__ == '__main__':
+    create_imdb()
+    for movie in get_top250_movies_list():
+        # print(movie)
+        store_movie_data_to_db(movie)
+        get_movie_detail_data(movie)
+        # print(movie)
 
-create_imdb()
-for movie in get_top250_movies_list():
-    # print(movie)
-    store_movie_data_to_db(movie)
-    get_movie_detail_data(movie)
-    # print(movie)
 
 
-
-conn.close()
+    conn.close()
 
