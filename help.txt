@@ -1,0 +1,70 @@
+
+Commands available:
+
+search director
+
+	Description: Enter the director name for search.
+
+	Content Returned: One sentence summary for the director you enter; A table 				  of detailed movie information including movie title, release 				  year and rate on IMDb.
+	
+
+search actor
+
+	Description: Enter the actor name for search.
+
+	Content Returned: A table of detailed movie information related to the actor 				  including movie title, release year and rate on IMDb.
+
+director
+
+	Options:	
+		* top <limit>|bottom <limit> [default: top 10]
+		Description: Specifies whether to list the top <limit> matches or the
+		bottom <limit> matches.
+		* Note: Use space to separate the top/bottom and <limit>, not a "=".
+
+actor
+
+	Options:	
+		* top <limit>|bottom <limit> [default: top 10]
+		Description: Specifies whether to list the top <limit> matches or the
+		bottom <limit> matches.
+		* Note: Use space to separate the top/bottom and <limit>, not a "=".
+
+
+top directors bar chart
+
+	Description: Follow the prompt, enter how many top directors you would like to 			     see in the bar chart.
+
+	Content Returned: A Poltly webpage will prompt out with a specific bar chart.
+
+	* Note: Ordered by the number of movies on the "Top 250 List" directed by 			a director, from highest to lowest.
+
+
+top actors bar chart
+
+	Description: Follow the prompt, enter how many top actors you would like to 			     see in the bar chart.
+
+	Content Returned: A Poltly webpage will prompt out with a specific bar chart.
+	
+	* Note: Ordered by the number of movies on the "Top 250 List" played by 			a actor, from highest to lowest.
+
+
+top countries for directors pie chart
+
+	Description: Follow the prompt, enter how many top countries you would like to 			     see in the pie chart.
+
+	Content Returned: A Poltly webpage will prompt out with a specific pie chart.
+	
+	* Note: Ordered by the number of directors born in a country, from highest to 			lowest.
+
+
+years line chart
+
+	Description: Follow the prompt, enter how many years you would like to 			    	     see in the line chart （From the latest release year on the "Top 250 		     List"）.
+
+	Content Returned: A Poltly webpage will prompt out with a specific line chart. 				  The x axis is year, y axis is the number of movies on the "Top 			  250 List" for that year. 
+
+	
+	
+
+	
