@@ -2,6 +2,7 @@
 1. Data Source
 
 I use data scraping from IMDb web pages.
+
 API keys or client secrets are not needed.
 
 -----------------------------------------------------------------------------------------------------------------------
@@ -17,6 +18,7 @@ This is the link about how to get started with Plotly with Python: https://plot.
 "data_access_storage.py" works for data scraping and crawling from web pages and storaging into the database.
 
 Main functions are:
+
 create_imdb(): Create IMDB.db and tables in it.
 get_top250_movies_list(): Scrap info from https://www.imdb.com/chart/top
 
