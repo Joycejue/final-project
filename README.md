@@ -1,14 +1,18 @@
 # final-project
 1. Data Source
+
+I use data scraping from IMDb web pages.
 API keys or client secrets are not needed.
 
 -----------------------------------------------------------------------------------------------------------------------
 2. Other information
+
 I use Plotly in my project to present some outcomes.
 This is the link about how to get started with Plotly with Python: https://plot.ly/python/getting-started/
 
 -----------------------------------------------------------------------------------------------------------------------
 3. Brief description of structure of code
+
 (1). Data access and storage: 
 "data_access_storage.py" works for data scraping and crawling from web pages and storaging into the database.
 
