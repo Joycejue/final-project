@@ -4,7 +4,8 @@ API keys or client secrets are not needed.
 
 -----------------------------------------------------------------------------------------------------------------------
 2. Other information
-Any other information needed to run the program (e.g., pointer to getting started info for plotly)
+I use Plotly in my project to present some outcomes.
+This is the link about how to get started with Plotly with Python: https://plot.ly/python/getting-started/
 
 -----------------------------------------------------------------------------------------------------------------------
 3. Brief description of structure of code
