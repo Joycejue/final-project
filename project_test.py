@@ -140,7 +140,7 @@ class TestProcess(unittest.TestCase):
         
 
 
-class TestMapping(unittest.TestCase):
+class TestPlot(unittest.TestCase):
 
     def test_charts(self):
         try:

@@ -641,29 +641,29 @@ def interactive_prompt():
             elif response.lower() == "top directors bar chart":
                 try:
                     number = int(input("How many? "))
-                    if number <= 3048:
+                    if number <= 151:
                         params_dic = {"order":"top","limit":number}
                         result = top_director(**params_dic)
                         bar_charts_director(result = result, name = "Bar Chart - Top {} Directors".format(number), title = "Bar Chart - Top {} Directors".format(number))
                     else:
-                        print("Wrong input. Please enter an integer (<3048) next time.")    
+                        print("Wrong input. Please enter an integer (<=151) next time.")    
                 except:
-                    print("Wrong input. Please enter an integer (<3048) next time.")
+                    print("Wrong input. Please enter an integer (<=151) next time.")
                     
 
 
             elif response.lower() == "top actors bar chart":
                 try:
                     number = int(input("How many? "))
-                    if number <= 151:
+                    if number <= 3048:
                         params_dic = {"order":"top","limit":number}
                         result = top_actor(**params_dic)
                         bar_charts_actor(result = result, name = "Bar Chart - Top {} Actor".fomat(number), title = "Bar Chart - Top {} Actor".fomat(number))
                     else:
-                        print("Wrong input. Please enter an integer (<151) next time.")
+                        print("Wrong input. Please enter an integer (<=3048) next time.")
                             
                 except:
-                    print("Wrong input. Please enter an integer (<151) next time.")
+                    print("Wrong input. Please enter an integer (<=3048) next time.")
                     
 
 
@@ -674,10 +674,10 @@ def interactive_prompt():
                     if number <= 30:
                         top_country_pie_chart(input_number=number, name="Pie Chart - Top {} Countries for Directors".format(number))
                     else:
-                        print("Wrong input. Please enter an integer (<30) next time.")    
+                        print("Wrong input. Please enter an integer (<=30) next time.")    
                             
                 except:
-                    print("Wrong input. Please enter an integer (<30) next time.")    
+                    print("Wrong input. Please enter an integer (<=30) next time.")    
 
 
 
@@ -687,11 +687,11 @@ def interactive_prompt():
                     if number <= 82:
                         line_chart_year(input_number=number, name="Line Chart - Number of Movies in the Last {} Years".format(number))
                     else:
-                        print("Wrong input. Please enter an integer (<30) next time.")    
+                        print("Wrong input. Please enter an integer (<=82) next time.")    
         
                 except:
                     # print(e)
-                    print("Wrong input. Please enter an integer (<82) next time.")    
+                    print("Wrong input. Please enter an integer (<=82) next time.")    
 
 
 

@@ -1,6 +1,10 @@
 
 Commands available:
 
+help
+
+	Description: Showing up all available commands and how to use them.
+
 search director
 
 	Description: Enter the director name for search.
